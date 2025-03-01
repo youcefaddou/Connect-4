@@ -58,8 +58,8 @@ function playerMove(colIndex) {
             updateGrid()
 
             if (checkWinner()) {
-                message.textContent = `Le joueur ${currentPlayer} a gagné !`
-                // document.querySelector('#playerTurn').innerHTML = `C'est au tour du joueur <span class="red-text">Rouge</span>`
+                //message.textContent = `Le joueur ${currentPlayer} a gagné !`
+                message.innerHTML = `Le joueur <span class="${currentPlayer === 'Rouge' ? 'red-text' : 'yellow-text'}">${currentPlayer}</span> a gagné !`
                 gameOver = true
             } else if (isDraw()) {
                 message.textContent = `Égalité, personne ne gagne !`
@@ -88,8 +88,8 @@ function random(min, max) {
 
 function cpuMove() {
     if (gameOver) {
-        document.querySelector('#message').textContent = 'Le jeu est terminé !'
-        // message.innerHTML = `Le joueur <span class="${currentPlayer === 'Rouge' ? 'red-text' : 'yellow-text'}">${currentPlayer}</span> a gagné !`
+        //document.querySelector('#message').textContent = 'Le jeu est terminé !'
+        message.innerHTML = `Le joueur <span class="${currentPlayer === 'Rouge' ? 'red-text' : 'yellow-text'}">${currentPlayer}</span> a gagné !`
     }
     let colIndex
     let rowIndex
@@ -113,8 +113,8 @@ function cpuMove() {
         gameOver = true
     } else {
         currentPlayer = currentPlayer === 'Rouge' ? 'Jaune' : 'Rouge'
-        document.querySelector('#playerTurn').textContent = `C'est au tour du joueur ${currentPlayer}`
-        // document.querySelector('#playerTurn').innerHTML = `C'est au tour du joueur <span class="${currentPlayer === 'Rouge' ? 'red-text' : 'yellow-text'}">${currentPlayer}</span>`
+        //document.querySelector('#playerTurn').textContent = `C'est au tour du joueur ${currentPlayer}`
+        document.querySelector('#playerTurn').innerHTML = `C'est au tour du joueur <span class="${currentPlayer === 'Rouge' ? 'red-text' : 'yellow-text'}">${currentPlayer}</span>`
     }
 }
 function updateGrid() {
@@ -215,5 +215,6 @@ function reset() {
     count = 0
     updateGrid()
     document.querySelector('#message').textContent = ''
+    // document.querySelector('#playerTurn').textContent = `C'est au tour du joueur ${currentPlayer}`
     document.querySelector('#playerTurn').innerHTML = `C'est au tour du joueur <span class="red-text">Rouge</span>`
 }

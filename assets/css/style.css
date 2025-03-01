@@ -79,7 +79,7 @@ main {
     align-content: flex-end;
     width: 70vw;
     height: 60vh;
-    margin-top: 15vw;
+    margin-top: 10vh;
 }
 
 #gameContainer {
@@ -119,9 +119,7 @@ main {
     margin-top: 20px;
     margin-bottom: 20px;
 }
-#playerTurn:last-child {
-: white;
-}
+
 #message {
     font-size: 1.5rem;
     font-weight: bold;
@@ -140,20 +138,12 @@ main {
 .cell {
     transition: background-color 0.3s ease-in-out;
 }
-.red-text {
-    color: red;
-    font-weight: bold;
-    font-size: 2rem;
-}
 
-.yellow-text {
-    color: rgb(255, 255, 0);
+.red-text {
+    margin-left: 10px;
+    color: rgb(226, 26, 36); 
     font-weight: bold;
     font-size: 2rem;
-}
-.red-text {
-    color: rgb(238, 32, 32); 
-    font-weight: bold;
     text-shadow: 
         -1px -1px 0 black, 
         1px -1px 0 black,  
@@ -162,8 +152,10 @@ main {
 }
 
 .yellow-text {
+    margin-left: 10px;
     color: yellow; 
     font-weight: bold;
+    font-size: 2rem;
     text-shadow: 
         -1px -1px 0 black, 
         1px -1px 0 black,  
