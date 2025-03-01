@@ -23,12 +23,14 @@ header {
 #title {
     font-size: 3em;
     font-weight: bold;
-    color: #365597;
+    color: #3d7aff;
     margin-bottom: 20px;
     padding: 20px;
-    h1 {
-        text-shadow: #10ffff;
-    }
+    text-shadow: 
+        -1px -1px 0 black, 
+        1px -1px 0 black,  
+        -1px 1px 0 black,  
+        1px 1px 0 black;
 }
 
 .quatre {
@@ -92,7 +94,7 @@ main {
     max-height: 560px; 
     border: 2px double black;
     gap: 5px; 
-    background-color: #365597; 
+    background-color: #3d7aff;
     padding: 5px; 
     align-self: center;
 }
@@ -141,6 +143,7 @@ main {
 
 .red-text {
     margin-left: 10px;
+    margin-right: 10px;
     color: rgb(226, 26, 36); 
     font-weight: bold;
     font-size: 2rem;
@@ -153,6 +156,7 @@ main {
 
 .yellow-text {
     margin-left: 10px;
+    margin-right: 10px;
     color: yellow; 
     font-weight: bold;
     font-size: 2rem;
