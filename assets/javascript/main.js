@@ -1,197 +1,219 @@
 const gridPfour = [
-    ["","","","","",""],
-    ["","","","","",""],
-    ["","","","","",""],
-    ["","","","","",""],
-    ["","","","","",""],
-    ["","","","","",""],
-    ["","","","","",""],
+    ["", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", ""],
 ]
 const gameContainer = document.querySelector('#gameContainer')
-
-
-function createMap(map){
-    map.forEach((row) =>{
-        const rowContainer = document.createElement('div')
-        rowContainer.classList.add('row')
-        gameContainer.appendChild(rowContainer)
-        
-        row.forEach((cell)=>{
-            const cellContainer = document.createElement('div')
-            cellContainer.classList.add("cell")
-            rowContainer.appendChild(cellContainer)
-        })
-    })
-}
-
-
-createMap(gridPfour)
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////
-/*
 const gameMode = document.querySelector('#gameMode')
-const gameContainer = document.querySelector('#gameContainer')
 const modeBtn = document.querySelector('#modeBtn')
 const pvpBtn = document.querySelector('#pvp')
 const cpuBtn = document.querySelector('#cpu')
 
-const grid = [
-    ['', '', ''],
-    ['', '', ''],
-    ['', '', ''],
-]
-let currentPlayer = 'X'
+let currentPlayer = 'Rouge'
 let gameOver = false
-let count = 0
 let isCpu = false
+let count = 0
 
 pvpBtn.addEventListener('click', () => {
     isCpu = false
     document.querySelector('#playerTurn').textContent = `C'est au tour du joueur ${currentPlayer}`
     reset()
 })
-
 cpuBtn.addEventListener('click', () => {
     isCpu = true
     document.querySelector('#playerTurn').textContent = `C'est au tour du joueur ${currentPlayer}`
     reset()
 })
 
-function displayGrid() {
-    grid.forEach((row, rowIndex) => {
+function createMap(map) {
+    map.forEach((row, rowIndex) => {
+        const rowContainer = document.createElement('div')
+        rowContainer.classList.add('row')
+        gameContainer.appendChild(rowContainer)
+
         row.forEach((cell, cellIndex) => {
             const cellContainer = document.createElement('div')
-            cellContainer.classList.add('cell')
-            cellContainer.addEventListener('click', () => playerMove(rowIndex, cellIndex))
-            gameContainer.appendChild(cellContainer)
+            cellContainer.classList.add("cell")
+            rowContainer.appendChild(cellContainer)
+            cellContainer.addEventListener('click', () => {
+                if (!gameOver) {
+                    playerMove(cellIndex)
+                }
+            })
         })
     })
 }
-displayGrid()
 
-function playerMove(rowIndex, cellIndex) {
-    if (gameOver) {
-        document.querySelector('#message').textContent = 'Le jeu est terminé !'
-    } else if (grid[rowIndex][cellIndex] !== '') {
-        document.querySelector('#message').textContent = 'Cette cellule est deja occupée'
-    }
-    else {
-        grid[rowIndex][cellIndex] = currentPlayer
-        count++
-        updateGrid()
-        if (checkWinner()) {
-            message.textContent = `Le joueur ${currentPlayer} a gagné !`
-            gameOver = true
-        } else if (isDraw()) {
-            message.textContent = `Match nul !`
-            gameOver = true
-        } else { // chgmt de joueur, décla ternaire pour eviter les if else
-            currentPlayer = currentPlayer === 'X' ? 'O' : 'X'
-            document.querySelector('#playerTurn').textContent = `C'est au tour du joueur ${currentPlayer}`
-            if (isCpu && currentPlayer === 'O') {
-                setTimeout(() => cpuMove(), 800)
+createMap(gridPfour)
+
+function playerMove(colIndex) {
+    if (!gameOver) { 
+        const rowIndex = emptyRow(colIndex) 
+        if (rowIndex !== -1) { // si la colonne n'est pas pleine
+            count++
+            gridPfour[rowIndex][colIndex] = currentPlayer
+            updateGrid()
+
+            if (checkWinner()) {
+                message.textContent = `Le joueur ${currentPlayer} a gagné !`
+                // document.querySelector('#playerTurn').innerHTML = `C'est au tour du joueur <span class="red-text">Rouge</span>`
+                gameOver = true
+            } else if (isDraw()) {
+                message.textContent = `Égalité, personne ne gagne !`
+                gameOver = true
+            } else {
+                currentPlayer = currentPlayer === 'Rouge' ? 'Jaune' : 'Rouge'
+                // document.querySelector('#playerTurn').textContent = `C'est au tour du joueur ${currentPlayer}`
+                document.querySelector('#playerTurn').innerHTML = `C'est au tour du joueur <span class="${currentPlayer === 'Rouge' ? 'red-text' : 'yellow-text'}">${currentPlayer}</span>`
+                if (isCpu && currentPlayer === 'Jaune') {
+                    setTimeout(() => cpuMove(), 800)
+                }
             }
+        } else { 
+            document.querySelector('#message').textContent = `Cette colonne est pleine !`
+            setTimeout(() => { // enlever le message 2 sec après
+                document.querySelector('#message').textContent = ''
+            }, 2000)
         }
+    } else { 
+        document.querySelector('#message').textContent = `Le jeu est terminé !`
     }
 }
-
-// fonction qui parcourt ttes les cellules du jeu et MAJ leur contenu
-function updateGrid() {
-    const cells = document.querySelectorAll('.cell')
-    cells.forEach((cell, index) => {
-        const rowIndex = Math.floor(index / 3)  // calc index de la ligne
-        const cellIndex = index % 3  // calc index de la cellule 
-        cell.textContent = grid[rowIndex][cellIndex]
-    })
-}
-
-function checkWinner() {
-    //verif des lignes
-    for (let i = 0; i < 3; i++) {
-        if (grid[i][0] && grid[i][0] === grid[i][1] && grid[i][1] == grid[i][2]) {
-            return true
-        }
-    }
-    //verif des colonnes
-    for (let i = 0; i < 3; i++) {
-        if (grid[0][i] && grid[0][i] === grid[1][i] && grid[1][i] == grid[2][i]) {
-            return true
-        }
-    }
-    //verif des diago
-    for (let i = 0; i < 3; i+=2) {
-        if (grid[0][0+i] && grid[0][0+i] === grid[1][1] && grid[1][1] === grid[2][2-i]) {
-            return true
-        }
-    }
-    return false
-}
-// verifier si egalité ou pas (si les cellules sont vides ou pas)
-function isDraw() {
-
-    return count === 9
-    // for (let i = 0; i < 3; i++) {
-    //     for (let j = 0; j< 3; j++) {
-    //         if (grid[i][j] === '') {
-    //             return false
-    //         }
-    //     }
-    // }
-    // return true
-}
-
 function random(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
 function cpuMove() {
     if (gameOver) {
         document.querySelector('#message').textContent = 'Le jeu est terminé !'
+        // message.innerHTML = `Le joueur <span class="${currentPlayer === 'Rouge' ? 'red-text' : 'yellow-text'}">${currentPlayer}</span> a gagné !`
     }
+    let colIndex
     let rowIndex
-    let cellIndex
-    // tant qu'une cellule n'est pas vide 
+    // choisit une colonne random jusqu'a en trouver une pas pleine
     while (true) {
-        rowIndex = random(0, 2)
-        cellIndex = random(0, 2)
-        if (grid[rowIndex][cellIndex] === '') {
+        colIndex = random(0, 6)
+        rowIndex = emptyRow(colIndex)   //trouver 1ere cellule vide dans la colonne
+        if (rowIndex !== -1) {          //si la col n'est pas pleine
             break
         }
     }
-    // mouvement du cpu quasi identique a la fonction playerMove
-    grid[rowIndex][cellIndex] = currentPlayer
     count++
+    gridPfour[rowIndex][colIndex] = currentPlayer
     updateGrid()
+
     if (checkWinner()) {
         message.textContent = `Le joueur ${currentPlayer} a gagné !`
         gameOver = true
     } else if (isDraw()) {
-        message.textContent = `Match nul !`
+        message.textContent = `Égalité, personne ne gagne !`
         gameOver = true
-    } else { // chgmt de joueur, décla ternaire pour eviter les if else
-        currentPlayer = currentPlayer === 'X' ? 'O' : 'X'
-        document.querySelector('#playerTurn').textContent = `C'est au tour de ${currentPlayer}`
-
+    } else {
+        currentPlayer = currentPlayer === 'Rouge' ? 'Jaune' : 'Rouge'
+        document.querySelector('#playerTurn').textContent = `C'est au tour du joueur ${currentPlayer}`
+        // document.querySelector('#playerTurn').innerHTML = `C'est au tour du joueur <span class="${currentPlayer === 'Rouge' ? 'red-text' : 'yellow-text'}">${currentPlayer}</span>`
     }
 }
+function updateGrid() {
+    const cells = document.querySelectorAll('.cell')
+    cells.forEach((cell, index) => {
+        const rowIndex = Math.floor(index / 7) // calcul index de ligne (6lignes) 
+        const cellIndex = index % 7 // calc index cellule (7 colonnes)
 
-function reset() {
-    grid.forEach((row, rowIndex) => {
-        row.forEach((cell, cellIndex) => {
-            grid[rowIndex][cellIndex] = ""  // On vide la grille
-            currentPlayer = 'X'
-            gameOver = false
-            count = 0
-            updateGrid()
-            document.querySelector("#message").textContent = ""
-            document.querySelector("#playerTurn").textContent = `C'est au tour du joueur ${currentPlayer}`
-        })
+        const cellValue = gridPfour[rowIndex][cellIndex] // récup la valeur de la cellule
+        cell.textContent = ''
+        cell.classList.remove('red', 'yellow')
+//applique la classe en fonction de la valeur de la cell
+        if (cellValue === 'Rouge') {
+            cell.classList.add('red')
+        } else if (cellValue === 'Jaune') {
+            cell.classList.add('yellow')
+        }
     })
 }
-*/
+//fonction pour trouver une cell vide dans une colonne 
+function emptyRow(colIndex) {
+    for (let rowIndex = 5; rowIndex >= 0; rowIndex--){ // commence par lebas de la col
+        if (gridPfour[rowIndex][colIndex] === '') {
+            return rowIndex // index de la 1ere cell vide
+        }
+    }
+    return -1 // si la col est pleine
+}
+
+function isDraw() {
+    return count === 42
+}
+
+function checkWinner() {
+    const rows = 6
+    const cols = 7
+
+    //check des lignes
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols - 3; col++) {
+            if (gridPfour[row][col]
+                && gridPfour[row][col] === gridPfour[row][col + 1]
+                && gridPfour[row][col] === gridPfour[row][col + 2]
+                && gridPfour[row][col] === gridPfour[row][col + 3]) {
+
+                return gridPfour[row][col]
+            }
+        }
+    }
+    //check des colonnes
+    for (let col = 0; col < cols; col++) {
+        for (let row = 0; row < rows - 3; row++) {
+            if (gridPfour[row][col]
+                && gridPfour[row][col] === gridPfour[row + 1][col]
+                && gridPfour[row][col] === gridPfour[row + 2][col]
+                && gridPfour[row][col] === gridPfour[row + 3][col]) {
+
+                return gridPfour[row][col]
+            }
+        }
+    }
+    //check des diago vers le bas
+    for (let row = 0; row < rows - 3; row++) {
+        for (let col = 0; col < cols - 3; col++) {
+            if (gridPfour[row][col]
+                && gridPfour[row][col] === gridPfour[row + 1][col + 1]
+                && gridPfour[row][col] === gridPfour[row + 2][col + 2]
+                && gridPfour[row][col] === gridPfour[row + 3][col + 3]) {
+
+                return gridPfour[row][col]
+            }
+        }
+    }
+    //check des diago vers le haut
+    for (let row = 3; row < rows; row++) {
+        for (let col = 0; col < cols - 3; col++) {
+            if (gridPfour[row][col]
+                && gridPfour[row][col] === gridPfour[row - 1][col + 1]
+                && gridPfour[row][col] === gridPfour[row - 2][col + 2]
+                && gridPfour[row][col] === gridPfour[row - 3][col + 3]) {
+
+                return gridPfour[row][col]
+            }
+        }
+    }
+    return false
+
+}
+function reset() {
+    gridPfour.forEach((row, rowIndex) => {
+        row.forEach((cell, cellIndex) => {
+            gridPfour[rowIndex][cellIndex] = "" //on vide la grille
+
+        })
+    })
+    currentPlayer = 'Rouge'
+    gameOver = false
+    count = 0
+    updateGrid()
+    document.querySelector('#message').textContent = ''
+    document.querySelector('#playerTurn').innerHTML = `C'est au tour du joueur <span class="red-text">Rouge</span>`
+}
