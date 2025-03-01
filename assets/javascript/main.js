@@ -11,6 +11,19 @@ const gameMode = document.querySelector('#gameMode')
 const modeBtn = document.querySelector('#modeBtn')
 const pvpBtn = document.querySelector('#pvp')
 const cpuBtn = document.querySelector('#cpu')
+const endGameModal = document.querySelector('#endGameModal')
+const modalMessage = document.querySelector('#message')
+const restartButton = document.querySelector('#restartButton')
+const errorMessage = document.querySelector('#errorMessage')
+function showEndGameModal(message) {
+    modalMessage.innerHTML = message; // utilise innerHTML pour le span
+    endGameModal.style.display = 'flex' // Afficher la modal
+}
+
+restartButton.addEventListener('click', () => {
+    endGameModal.style.display = 'none' // Cacher la modal
+    reset()
+})
 
 let currentPlayer = 'Rouge'
 let gameOver = false
@@ -50,8 +63,8 @@ function createMap(map) {
 createMap(gridPfour)
 
 function playerMove(colIndex) {
-    if (!gameOver) { 
-        const rowIndex = emptyRow(colIndex) 
+    if (!gameOver) {
+        const rowIndex = emptyRow(colIndex)
         if (rowIndex !== -1) { // si la colonne n'est pas pleine
             count++
             gridPfour[rowIndex][colIndex] = currentPlayer
@@ -59,10 +72,10 @@ function playerMove(colIndex) {
 
             if (checkWinner()) {
                 //message.textContent = `Le joueur ${currentPlayer} a gagné !`
-                message.innerHTML = `Le joueur <span class="${currentPlayer === 'Rouge' ? 'red-text' : 'yellow-text'}">${currentPlayer}</span> a gagné !`
+                showEndGameModal(`Le joueur <span class="${currentPlayer === 'Rouge' ? 'red-text' : 'yellow-text'}">${currentPlayer}</span> a gagné !`);
                 gameOver = true
             } else if (isDraw()) {
-                message.textContent = `Égalité, personne ne gagne !`
+                showEndGameModal('Égalité, personne ne gagne !')
                 gameOver = true
             } else {
                 currentPlayer = currentPlayer === 'Rouge' ? 'Jaune' : 'Rouge'
@@ -72,13 +85,14 @@ function playerMove(colIndex) {
                     setTimeout(() => cpuMove(), 800)
                 }
             }
-        } else { 
-            document.querySelector('#message').textContent = `Cette colonne est pleine !`
-            setTimeout(() => { // enlever le message 2 sec après
-                document.querySelector('#message').textContent = ''
-            }, 2000)
+        } else {
+            errorMessage.textContent = 'Cette colonne est pleine !';
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 1800);
         }
-    } else { 
+    } else {
         document.querySelector('#message').textContent = `Le jeu est terminé !`
     }
 }
@@ -126,7 +140,7 @@ function updateGrid() {
         const cellValue = gridPfour[rowIndex][cellIndex] // récup la valeur de la cellule
         cell.textContent = ''
         cell.classList.remove('red', 'yellow')
-//applique la classe en fonction de la valeur de la cell
+        //applique la classe en fonction de la valeur de la cell
         if (cellValue === 'Rouge') {
             cell.classList.add('red')
         } else if (cellValue === 'Jaune') {
@@ -136,7 +150,7 @@ function updateGrid() {
 }
 //fonction pour trouver une cell vide dans une colonne 
 function emptyRow(colIndex) {
-    for (let rowIndex = 5; rowIndex >= 0; rowIndex--){ // commence par lebas de la col
+    for (let rowIndex = 5; rowIndex >= 0; rowIndex--) { // commence par lebas de la col
         if (gridPfour[rowIndex][colIndex] === '') {
             return rowIndex // index de la 1ere cell vide
         }
