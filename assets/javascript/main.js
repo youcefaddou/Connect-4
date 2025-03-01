@@ -15,6 +15,7 @@ const endGameModal = document.querySelector('#endGameModal')
 const modalMessage = document.querySelector('#message')
 const restartButton = document.querySelector('#restartButton')
 const errorMessage = document.querySelector('#errorMessage')
+
 function showEndGameModal(message) {
     modalMessage.innerHTML = message; // utilise innerHTML pour le span
     endGameModal.style.display = 'flex' // Afficher la modal
